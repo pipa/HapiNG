@@ -1,0 +1,27 @@
+{
+  "name": "haping",
+  "version": "0.0.1",
+  "authors": [
+    "Luis Matute <luis.matute@me.com>"
+  ],
+  "description": "HapiJS + AngularJS",
+  "main": "app.js",
+  "keywords": [
+    "HapiJS",
+    "AngularJS"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.15",
+    "angular-animate": "~1.3.15",
+    "angular-ui-router": "~0.2.13",
+    "jquery": "~2.1.3"
+  }
+}
