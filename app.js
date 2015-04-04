@@ -1,11 +1,12 @@
 // Dependencies =================================
 	var Hapi 		= require('hapi'),
 		config 		= require('./server/config/'),
+		db			= require('./server/database'),
 		admin_path	= __dirname + '/admin',
 		public_path	= __dirname + '/public';
 
 // Initialization code for the App ==============
-	var server = new Hapi.Server();
+	var server = new Hapi.Server({ app: config });
 
 	// Template Engines
 		server.views({
@@ -18,7 +19,7 @@
 		var web = server.connection({
 				host: config.env.host,
 				port: 8000, // config.port
-				labels: ['web']
+				labels: ['web','api']
 			});
 
 		var admin = server.connection({
@@ -35,7 +36,7 @@
 	// require('./server/plugins')(server);
 
 	// Require the routes and pass the server object.
-	// require('./server/config/routes')(server);
+	require('./server/config/routes')(server);
 
 // Start the server =============================
 	server.start(function() {
