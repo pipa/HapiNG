@@ -3,7 +3,6 @@
 // Dependencies =================================
 	var Joi 		= require('joi'),
 		Boom 		= require('boom'),
-		// ObjectId 	= require('mongoose').Types.ObjectId
 		Contact 	= require('../model/contact');
 
 // Routes Object ================================

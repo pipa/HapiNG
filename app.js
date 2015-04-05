@@ -33,13 +33,13 @@
 		admin.path(admin_path + '/assets');
 
 	// Bootstrap Hapi Server Plugins, passes the server object to the plugins
-	// require('./server/plugins')(server);
+		require('./server/plugins')(server);
 
 	// Require the routes and pass the server object.
-	require('./server/config/routes')(server);
+		require('./server/config/routes')(server);
 
 // Start the server =============================
 	server.start(function() {
 		//Log to the console the host and port info
-		console.log('Server started at: ' + server.info.uri);
+		server.log('info', 'Server started at: ' + server.info.uri);
 	});
