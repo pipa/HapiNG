@@ -19,10 +19,11 @@
 			{ method: 'DELETE', path: '/api/contact/{contact_id}', 	config: api.contact.delete },
 
 			// Admin
-			{ method: 'GET', path: '/admin', handler: function (request, reply) { return reply('ok'); } },
-			{ method: 'GET', path: '/admin/css/{path*}', handler: { directory: { path: './css' } } },
-			{ method: 'GET', path: '/admin/img/{path*}', handler: { directory: { path: './img' } } },
-			{ method: 'GET', path: '/admin/js/{path*}', handler: { directory: { path: './js' } } },
+			{ method: 'GET', 	path: '/admin/',					config: controller.admin.index },
+			{ method: 'GET', 	path: '/admin/css/{path*}', 		handler: { directory: { path: './css' } } },
+			{ method: 'GET', 	path: '/admin/img/{path*}', 		handler: { directory: { path: './img' } } },
+			{ method: 'GET', 	path: '/admin/js/{path*}', 			handler: { directory: { path: './js' } } },
+			{ method: 'GET', 	path: '/admin/views/{path*}', 		handler: { directory: { path: './views' } } },
 
 			// Public
 			{ method: 'GET', path: '/', handler: function (request, reply) { return reply('ok'); } }

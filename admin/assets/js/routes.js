@@ -4,9 +4,9 @@
 	function Routes($stateProvider, $locationProvider, $urlRouterProvider, Config) {
 		$stateProvider
 			// Entry Point
-			.state('splash', {
+			.state('index', {
 				url: '/',
-				templateUrl: Config.tpl('splash')
+				templateUrl: Config.tpl('index')
 			})
 			// Secured
 			;

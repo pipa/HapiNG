@@ -1,5 +1,6 @@
 // Dependencies =================================
 	var Hapi 		= require('hapi'),
+		Handlebars	= require('handlebars'),
 		config 		= require('./server/config/'),
 		db			= require('./server/database'),
 		admin_path	= __dirname + '/admin',
@@ -11,8 +12,11 @@
 	// Template Engines
 		server.views({
 			engines: {
-				hbs: require('handlebars')
-			}
+				html: Handlebars.create()
+			},
+			allowAbsolutePaths: true,
+			relativeTo: './server/views',
+			partialsPath: 'partials'
 		});
 
 	// TODO: Separate servers by port

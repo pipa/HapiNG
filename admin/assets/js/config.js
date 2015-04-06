@@ -15,6 +15,6 @@
 		app_name: "",
 		env: env[window.le_app.env || 'dev'],
 		tpl: function (view) {
-			return '/assets/views/prd/'+view+'.html';
+			return '/admin/views/prd/'+view+'.html';
 		}
 	};

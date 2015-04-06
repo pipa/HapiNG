@@ -23,9 +23,9 @@
   gulp.task('views', function() {
     var opts = {};
     return gulp
-      .src('./assets/views/dev/**/*')
+      .src('./admin/assets/views/dev/**/*')
       .pipe(minifyHTML(opts))
-      .pipe(gulp.dest('./assets/views/prd/'))
+      .pipe(gulp.dest('./admin/assets/views/prd/'))
       .pipe(livereload());
   });
 
@@ -43,8 +43,8 @@
 // SASS Task ====================================
   gulp.task('sass', function() {
     var opt = { trace: true, style: "compressed" };
-    return sass('./assets/sass/master.scss', opt)
-      .pipe(gulp.dest('./assets/css/'))
+    return sass('./admin/assets/sass/master.scss', opt)
+      .pipe(gulp.dest('./admin/assets/css/'))
       .pipe(notify('Styles Task Completed'))
       .pipe(livereload());
   });
@@ -52,7 +52,7 @@
 // JS Task ======================================
   gulp.task('lint', function() {
     return gulp
-      .src(['./assets/js/dev/**/*.js','!**/*/libs/**/*'])
+      .src(['./admin/assets/js/**/*.js','!**/*/libs/**/*', '!bundle'])
       .pipe(jshint())
       .pipe(jshint.reporter('default'));
   });
@@ -61,7 +61,7 @@
   gulp.task('browserify', function() {
     // Single point of entry (make sure not to src ALL your files, browserify will figure it out for you)
     return gulp
-      .src(['./assets/js/main.js'])
+      .src(['./admin/assets/js/main.js'])
       .pipe(browserify({
         insertGlobals: true,
         debug: false
@@ -69,14 +69,14 @@
       .on('error', gutil.log)
       // Bundle to a single file
       .pipe(concat('bundle.js'))
-      .pipe(ngAnnotate()) // This does the minifyin magic for angular
+      // .pipe(ngAnnotate()) // This does the minifyin magic for angular
       // .pipe(uglify({
       //   compress: {
       //     drop_console: true
       //   }
       // }))
       // Output it to our dist folder
-      .pipe(gulp.dest('./assets/js/'))
+      .pipe(gulp.dest('./admin/assets/js/'))
       .pipe(livereload())
       .pipe(notify('Browserify Task Completed'));
   });
@@ -84,8 +84,9 @@
 // Watch Task ===================================
   gulp.task('watch', function() {
     livereload.listen();
-    gulp.watch(['./assets/js/**/*.js','!./assets/js/bundle.js'],['lint','browserify']);
-    gulp.watch('./assets/sass/**/*.scss',['sass']);
+    gulp.watch(['./admin/assets/js/**/*.js','!./admin/assets/js/bundle.js'],['lint','browserify']);
+    gulp.watch('./admin/assets/sass/**/*.scss',['sass']);
+    gulp.watch('./admin/assets/views/**/*.html',['views']);
     // gulp.watch('./assets/img/**/*',['imagemin'])
   });
 

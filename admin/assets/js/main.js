@@ -20,13 +20,13 @@
 		angular.module('app').constant('Config', require('./config'));
 
 		// Factories Init -------------
-		require('./factories/');
+		// require('./factories/');
 
 		// Controllers Init -----------
 		require('./controllers/');
 
 		// Directives Init ------------
-		require('./directives/');
+		// require('./directives/');
 
 		// Routes ---------------------
 		angular.module('app').config(require('./routes'));
