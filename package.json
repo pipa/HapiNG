@@ -35,6 +35,7 @@
     "imagemin-pngquant": "^4.0.0"
   },
   "dependencies": {
+    "bcrypt": "^0.8.2",
     "boom": "^2.7.0",
     "good": "^5.1.2",
     "good-console": "^4.1.0",

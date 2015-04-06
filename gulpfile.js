@@ -52,8 +52,8 @@
 // JS Task ======================================
   gulp.task('lint', function() {
     return gulp
-      .src(['./admin/assets/js/**/*.js','!**/*/libs/**/*', '!bundle'])
-      .pipe(jshint())
+      .src(['./admin/assets/js/**/*.js','!**/*/libs/**/*', '!./admin/assets/js/bundle.js'])
+      .pipe(jshint({ strict: false, node: true, globals: { window: true, angular: true, app: true, document: true, $: true } }))
       .pipe(jshint.reporter('default'));
   });
 

@@ -18,6 +18,12 @@
 			{ method: 'PUT', 	path: '/api/contact/{contact_id}', 	config: api.contact.update },
 			{ method: 'DELETE', path: '/api/contact/{contact_id}', 	config: api.contact.delete },
 
+			{ method: 'POST', 	path: '/api/user', 					config: api.user.create },
+			{ method: 'GET', 	path: '/api/user', 					config: api.user.read },
+			{ method: 'GET', 	path: '/api/user/{user_id}', 		config: api.user.read },
+			{ method: 'PUT', 	path: '/api/user/{user_id}', 		config: api.user.update },
+			{ method: 'DELETE', path: '/api/user/{user_id}', 		config: api.user.delete },
+
 			// Admin
 			{ method: 'GET', 	path: '/admin/',					config: controller.admin.index },
 			{ method: 'GET', 	path: '/admin/css/{path*}', 		handler: { directory: { path: './css' } } },

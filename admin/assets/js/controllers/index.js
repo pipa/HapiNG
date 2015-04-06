@@ -4,8 +4,8 @@
 	var angular = require('angular');
 
 // Define the list of controllers here
-	// require('./ctrl1');
-	// require('./ctrl2');
+	require('./main');
+	require('./login');
 
 // Exposing Module ============================
 	module.exports = angular.module('app.controllers', []);

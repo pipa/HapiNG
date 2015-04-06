@@ -19,8 +19,12 @@
 		// App Configurations ---------
 		angular.module('app').constant('Config', require('./config'));
 
-		// Factories Init -------------
-		// require('./factories/');
+		// Constants ------------------
+		require('./constants/');
+
+		// Factories & Services Init --
+		require('./services/');
+		require('./factories/');
 
 		// Controllers Init -----------
 		require('./controllers/');
