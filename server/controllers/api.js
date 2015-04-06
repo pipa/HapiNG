@@ -3,7 +3,8 @@
 // Dependencies =================================
 	var Joi 		= require('joi'),
 		Boom 		= require('boom'),
-		Contact 	= require('../model/contact');
+		Contact 	= require('../model/contact'),
+		User 		= require('../model/user');
 
 // Routes Object ================================
 	var api = {
@@ -106,16 +107,16 @@
 			create: {
 				validate: {
 					payload: {
-						name: Joi.string().required(),
-						email: Joi.string().email().required(),
-						message: Joi.string().required()
+						username: Joi.string().required(),
+						password: Joi.string().required(),
+						email: Joi.string().email().required()
 					}
 				},
 				handler: function(request, reply) {
-					var contact = new Contact(request.payload);
-					contact.save(function(err, contact) {
+					var user = new User(request.payload);
+					user.save(function(err, user) {
 						if (!err) {
-							reply(contact).created('/contact/' + contact._id); // HTTP 201
+							reply(user).created('/user/' + user._id); // HTTP 201
 						} else {
 							reply(Boom.forbidden(getErrorMessageFrom(err))); // HTTP 403
 						}

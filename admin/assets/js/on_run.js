@@ -12,7 +12,8 @@
 			var authorizedRoles = next.data.authorizedRoles;
 
 			if (authorizedRoles.indexOf('*') !== -1) return true; // anyone can access it
-
+			console.log(authorizedRoles);
+			console.log(!AuthFactory.isAuthorized(authorizedRoles));
 			if (!AuthFactory.isAuthorized(authorizedRoles)) {
 				event.preventDefault();
 				if (AuthFactory.isAuthenticated()) {

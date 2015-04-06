@@ -79,14 +79,22 @@ require('./user_roles.js');
 // Dependencies =================================
 
 // Controller Function ==========================
-	var login_ctrl = function ($scope) {
+	var login_ctrl = function ($scope, $rootScope, $state, AuthFactory, AUTH_EVENTS) {
 		$scope.credentials = {
 			username: '',
 			password: ''
 		};
-		console.log($scope.userRoles);
-		$scope.login = function() {
 
+		$scope.login = function(credentials) {
+			AuthFactory
+				.login(credentials)
+				.then(function (user) {
+					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+					$scope.setCurrentUser(user);
+					$state.go('logged.dashboard');
+				}, function () {
+					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
+				});
 		};
 	};
 
@@ -107,7 +115,7 @@ require('./user_roles.js');
 		$scope.currentUser = null;
 		$scope.userRoles = USER_ROLES;
 		$scope.isAuthorized = AuthFactory.isAuthorized;
-
+		console.log("main");
 		$scope.setCurrentUser = function (user) {
 			$scope.currentUser = user;
 		};
@@ -128,20 +136,20 @@ require('./user_roles.js');
 		var factory = {
 			login: function (credentials) {
 				return $http
-					.post('/login', credentials)
+					.post('/login/', credentials)
 					.then(function (res) {
-						Session.create(res.data.id, res.data.user.id,res.data.user.role);
-						return res.data.user;
+						Session.create('1', res.data._id, res.data.role, res.data.email);
+						return res.data;
 					});
 			},
 			isAuthenticated: function () {
-				return !!Session.userId;
+				return !!Session.user_id;
 			},
 			isAuthorized: function (authorizedRoles) {
 				if (!angular.isArray(authorizedRoles)) {
 					authorizedRoles = [authorizedRoles];
 				}
-				return (factory.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
+				return (factory.isAuthenticated() && authorizedRoles.indexOf(Session.user_role) !== -1);
 			}
 		};
 
@@ -356,7 +364,7 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 		// Bootstraping App to Doc ----
 		angular.bootstrap(document, ['app']);
 	});
-}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e31e48fd.js","/")
+}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_afdfb950.js","/")
 },{"+7ZJp0":24,"./config":1,"./constants/":3,"./controllers/":5,"./factories/":10,"./on_run":13,"./routes":14,"./services/":15,"angular":19,"angular-animate":17,"angular-ui-router":18,"buffer":21,"jquery":20}],13:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -373,7 +381,8 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 			var authorizedRoles = next.data.authorizedRoles;
 
 			if (authorizedRoles.indexOf('*') !== -1) return true; // anyone can access it
-
+			console.log(authorizedRoles);
+			console.log(!AuthFactory.isAuthorized(authorizedRoles));
 			if (!AuthFactory.isAuthorized(authorizedRoles)) {
 				event.preventDefault();
 				if (AuthFactory.isAuthenticated()) {
@@ -396,31 +405,27 @@ module.exports = on_run;
 // @ngInject ====================================
 	function Routes($stateProvider, $locationProvider, $urlRouterProvider, $httpProvider, Config, USER_ROLES) {
 		$stateProvider
-			// Entry Point
-			.state('main', {
-				abstract: true,
-				controller: 'main_ctrl'
+			// UnSecured
+			.state('login', {
+				url: '/',
+				templateUrl: Config.tpl('login'),
+				controller: 'login_ctrl',
+				data: {
+					authorizedRoles: [USER_ROLES.all]
+				}
 			})
-				// UnSecured
-				.state('main.login', {
-					url: '/',
-					templateUrl: Config.tpl('index'),
-					controller: 'login_ctrl',
-					data: {
-						authorizedRoles: [USER_ROLES.all]
-					}
-				})
-				// Secured
-				.state('logged',{
-					abstract: true,
-					data: {
-						authorizedRoles: [USER_ROLES.admin]
-					}
-				})
-					.state('dashboard',{
-						url: '/dashboard',
-						templateUrl: Config.tpl('dash')
-					});
+			// Secured
+			.state('secure',{
+				abstract: true,
+				template: '<ui-view />',
+				data: {
+					authorizedRoles: [USER_ROLES.admin]
+				}
+			})
+				.state('logged.dashboard',{
+					url: '/dashboard',
+					templateUrl: Config.tpl('dash')
+				});
 
 		$urlRouterProvider.otherwise('/');
 		// $locationProvider.html5Mode({
@@ -428,12 +433,9 @@ module.exports = on_run;
 		//  requireBase: false
 		// });
 
-		$httpProvider.interceptors.push([
-			'$injector',
-			function ($injector) {
-				return $injector.get('AuthInterceptor');
-			}
-		]);
+		$httpProvider.interceptors.push(['$injector', function ($injector) {
+			return $injector.get('AuthInterceptor');
+		}]);
 	}
 
 module.exports = Routes;
@@ -455,15 +457,17 @@ require('./session.js');
 
 // Service ======================================
 	var SessionService = function() {
-		this.create = function (sessionId, userId, userRole) {
+		this.create = function (sessionId, userId, userRole, email) {
 			this.id = sessionId;
-			this.userId = userId;
-			this.userRole = userRole;
+			this.user_id = userId;
+			this.user_role = userRole;
+			this.email = email;
 		};
 		this.destroy = function () {
 			this.id = null;
-			this.userId = null;
-			this.userRole = null;
+			this.user_id = null;
+			this.user_role = null;
+			this.email = null;
 		};
 	};
 

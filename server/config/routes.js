@@ -26,6 +26,7 @@
 
 			// Admin
 			{ method: 'GET', 	path: '/admin/',					config: controller.admin.index },
+			{ method: 'POST', 	path: '/login/',					config: controller.admin.login },
 			{ method: 'GET', 	path: '/admin/css/{path*}', 		handler: { directory: { path: './css' } } },
 			{ method: 'GET', 	path: '/admin/img/{path*}', 		handler: { directory: { path: './img' } } },
 			{ method: 'GET', 	path: '/admin/js/{path*}', 			handler: { directory: { path: './js' } } },

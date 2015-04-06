@@ -3,31 +3,27 @@
 // @ngInject ====================================
 	function Routes($stateProvider, $locationProvider, $urlRouterProvider, $httpProvider, Config, USER_ROLES) {
 		$stateProvider
-			// Entry Point
-			.state('main', {
-				abstract: true,
-				controller: 'main_ctrl'
+			// UnSecured
+			.state('login', {
+				url: '/',
+				templateUrl: Config.tpl('login'),
+				controller: 'login_ctrl',
+				data: {
+					authorizedRoles: [USER_ROLES.all]
+				}
 			})
-				// UnSecured
-				.state('main.login', {
-					url: '/',
-					templateUrl: Config.tpl('index'),
-					controller: 'login_ctrl',
-					data: {
-						authorizedRoles: [USER_ROLES.all]
-					}
-				})
-				// Secured
-				.state('logged',{
-					abstract: true,
-					data: {
-						authorizedRoles: [USER_ROLES.admin]
-					}
-				})
-					.state('dashboard',{
-						url: '/dashboard',
-						templateUrl: Config.tpl('dash')
-					});
+			// Secured
+			.state('secure',{
+				abstract: true,
+				template: '<ui-view />',
+				data: {
+					authorizedRoles: [USER_ROLES.admin]
+				}
+			})
+				.state('secure.dashboard',{
+					url: '/dashboard',
+					templateUrl: Config.tpl('dash')
+				});
 
 		$urlRouterProvider.otherwise('/');
 		// $locationProvider.html5Mode({
@@ -35,12 +31,9 @@
 		//  requireBase: false
 		// });
 
-		$httpProvider.interceptors.push([
-			'$injector',
-			function ($injector) {
-				return $injector.get('AuthInterceptor');
-			}
-		]);
+		$httpProvider.interceptors.push(['$injector', function ($injector) {
+			return $injector.get('AuthInterceptor');
+		}]);
 	}
 
 module.exports = Routes;

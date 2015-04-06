@@ -8,20 +8,20 @@
 		var factory = {
 			login: function (credentials) {
 				return $http
-					.post('/login', credentials)
+					.post('/login/', credentials)
 					.then(function (res) {
-						Session.create(res.data.id, res.data.user.id,res.data.user.role);
-						return res.data.user;
+						Session.create('1', res.data._id, res.data.role, res.data.email);
+						return res.data;
 					});
 			},
 			isAuthenticated: function () {
-				return !!Session.userId;
+				return !!Session.user_id;
 			},
 			isAuthorized: function (authorizedRoles) {
 				if (!angular.isArray(authorizedRoles)) {
 					authorizedRoles = [authorizedRoles];
 				}
-				return (factory.isAuthenticated() && authorizedRoles.indexOf(Session.userRole) !== -1);
+				return (factory.isAuthenticated() && authorizedRoles.indexOf(Session.user_role) !== -1);
 			}
 		};
 
