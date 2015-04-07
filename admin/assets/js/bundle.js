@@ -91,7 +91,7 @@ require('./user_roles.js');
 				.then(function (user) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.setCurrentUser(user);
-					$state.go('logged.dashboard');
+					$state.go('secure.dashboard');
 				}, function () {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
 				});
@@ -364,7 +364,7 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 		// Bootstraping App to Doc ----
 		angular.bootstrap(document, ['app']);
 	});
-}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_afdfb950.js","/")
+}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5cc2d57.js","/")
 },{"+7ZJp0":24,"./config":1,"./constants/":3,"./controllers/":5,"./factories/":10,"./on_run":13,"./routes":14,"./services/":15,"angular":19,"angular-animate":17,"angular-ui-router":18,"buffer":21,"jquery":20}],13:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
@@ -422,16 +422,16 @@ module.exports = on_run;
 					authorizedRoles: [USER_ROLES.admin]
 				}
 			})
-				.state('logged.dashboard',{
+				.state('secure.dashboard',{
 					url: '/dashboard',
 					templateUrl: Config.tpl('dash')
 				});
 
 		$urlRouterProvider.otherwise('/');
-		// $locationProvider.html5Mode({
-		//  enabled: true,
-		//  requireBase: false
-		// });
+		$locationProvider.html5Mode({
+		 enabled: true,
+		 requireBase: false
+		});
 
 		$httpProvider.interceptors.push(['$injector', function ($injector) {
 			return $injector.get('AuthInterceptor');

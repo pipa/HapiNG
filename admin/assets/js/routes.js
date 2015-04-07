@@ -26,10 +26,10 @@
 				});
 
 		$urlRouterProvider.otherwise('/');
-		// $locationProvider.html5Mode({
-		//  enabled: true,
-		//  requireBase: false
-		// });
+		$locationProvider.html5Mode({
+		 enabled: true,
+		 requireBase: false
+		});
 
 		$httpProvider.interceptors.push(['$injector', function ($injector) {
 			return $injector.get('AuthInterceptor');

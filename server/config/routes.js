@@ -31,6 +31,7 @@
 			{ method: 'GET', 	path: '/admin/img/{path*}', 		handler: { directory: { path: './img' } } },
 			{ method: 'GET', 	path: '/admin/js/{path*}', 			handler: { directory: { path: './js' } } },
 			{ method: 'GET', 	path: '/admin/views/{path*}', 		handler: { directory: { path: './views' } } },
+			{ method: 'GET', 	path: '/admin/*',					config: controller.admin.index },
 
 			// Public
 			{ method: 'GET', path: '/', handler: function (request, reply) { return reply('ok'); } }

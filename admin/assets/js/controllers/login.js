@@ -15,7 +15,7 @@
 				.then(function (user) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.setCurrentUser(user);
-					$state.go('logged.dashboard');
+					$state.go('secure.dashboard');
 				}, function () {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
 				});
