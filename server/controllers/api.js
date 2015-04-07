@@ -41,7 +41,7 @@
 					Contact.find(query, function(err, contacts) {
 						// Returns an  array
 						if (!err) {
-							var result = (contacts.length > 1)? contacts[0]:contacts;
+							var result = (contacts.length > 1 && contacts.length !== 0)? contacts: contacts[0];
 							reply(result);
 						} else {
 							reply(Boom.badImplementation(err)); // 500 error

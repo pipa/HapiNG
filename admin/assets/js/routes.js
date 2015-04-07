@@ -3,32 +3,47 @@
 // @ngInject ====================================
 	function Routes($stateProvider, $locationProvider, $urlRouterProvider, $httpProvider, Config, USER_ROLES) {
 		$stateProvider
-			// UnSecured
-			.state('login', {
-				url: '/',
-				templateUrl: Config.tpl('login'),
-				controller: 'login_ctrl',
-				data: {
-					authorizedRoles: [USER_ROLES.all]
-				}
-			})
-			// Secured
-			.state('secure',{
+			.state('main',{
 				abstract: true,
-				template: '<ui-view />',
-				data: {
-					authorizedRoles: [USER_ROLES.admin]
-				}
+				url: '/admin',
+				controller: 'main_ctrl',
+				template: '<ui-view />'
 			})
-				.state('secure.dashboard',{
-					url: '/dashboard',
-					templateUrl: Config.tpl('dash')
-				});
+				// UnSecured
+				.state('main.login', {
+					url: '/',
+					templateUrl: Config.tpl('login'),
+					controller: 'login_ctrl',
+					data: {
+						authorizedRoles: [USER_ROLES.all]
+					}
+				})
+				// Secured
+				.state('main.secure',{
+					abstract: true,
+					template: '<ui-view />',
+					data: {
+						authorizedRoles: [USER_ROLES.admin]
+					}
+				})
+					.state('main.secure.dashboard',{
+						url: '/dashboard',
+						templateUrl: Config.tpl('dash')
+					})
+					.state('main.secure.contacts',{
+						url: '/contacts',
+						templateUrl: Config.tpl('contacts/index'),
+						controller: 'contacts_ctrl'
+					})
+						.state('main.secure.contacts.edit',{
+							url: '/edit/:contact_id',
+							templateUrl: Config.tpl('contacts/edit')
+						});
 
 		$urlRouterProvider.otherwise('/');
 		$locationProvider.html5Mode({
-		 enabled: true,
-		 requireBase: false
+			enabled: true,
+			requireBase: false
 		});
 
 		$httpProvider.interceptors.push(['$injector', function ($injector) {

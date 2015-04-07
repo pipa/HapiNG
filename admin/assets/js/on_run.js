@@ -1,7 +1,7 @@
 "use strict";
 
 // @ngInject ====================================
-	function on_run($rootScope, Config, AUTH_EVENTS, AuthFactory) {
+	function on_run($rootScope, Config, $state, AUTH_EVENTS, AuthFactory) {
 		$rootScope.app_name = Config.app_name;
 		$rootScope.title = Config.app_name;
 
@@ -12,8 +12,7 @@
 			var authorizedRoles = next.data.authorizedRoles;
 
 			if (authorizedRoles.indexOf('*') !== -1) return true; // anyone can access it
-			console.log(authorizedRoles);
-			console.log(!AuthFactory.isAuthorized(authorizedRoles));
+
 			if (!AuthFactory.isAuthorized(authorizedRoles)) {
 				event.preventDefault();
 				if (AuthFactory.isAuthenticated()) {
@@ -22,6 +21,9 @@
 				} else {
 					// user is not logged in
 					$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+				}
+				if (next.name !== "main.login" || next.name !== "main") {
+					$state.go('main.login');
 				}
 			}
 		});

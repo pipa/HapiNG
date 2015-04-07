@@ -21,7 +21,7 @@
 		}
 	};
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/config.js","/")
-},{"+7ZJp0":24,"buffer":21}],2:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -35,7 +35,7 @@
 		notAuthorized: 'auth-not-authorized'
 	});
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/constants/auth_events.js","/constants")
-},{"+7ZJp0":24,"buffer":21}],3:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -47,7 +47,7 @@ module.exports = angular.module('app.constants', []);
 require('./auth_events.js');
 require('./user_roles.js');
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/constants/index.js","/constants")
-},{"+7ZJp0":24,"./auth_events.js":2,"./user_roles.js":4,"angular":19,"buffer":21}],4:[function(require,module,exports){
+},{"+7ZJp0":26,"./auth_events.js":2,"./user_roles.js":4,"angular":21,"buffer":23}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -58,7 +58,62 @@ require('./user_roles.js');
 		guest: 'guest'
 	});
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/constants/user_roles.js","/constants")
-},{"+7ZJp0":24,"buffer":21}],5:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],5:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+"use strict";
+
+// Dependencies =================================
+
+// Controller Function ==========================
+	var contacts_ctrl = function ($scope, ContactsFactory) {
+		$scope.contacts = [];
+
+		// On each request
+		$scope.$on('$stateChangeSuccess', function(event, toState, toParams) {
+			// console.log(arguments);
+			var contact_id = ('contact_id' in toParams)? toParams.contact_id: '';
+			populate_contacts(contact_id);
+		});
+
+		$scope.delete_contact = function(contact) {
+			ContactsFactory
+				.delete(contact._id)
+				.success(function (json) {
+					console.log(json);
+					var contact_index = $scope.contacts.indexOf(contact);
+					$scope.contacts.splice( contact_index, 1 );
+					$scope.$apply();
+				})
+				.error(function(jqXHR, textStatus, errorThrown) {
+					console.log(jqXHR);
+					console.log(textStatus);
+					console.log(errorThrown);
+				});
+		};
+
+		var populate_contacts = function(contact_id) {
+			ContactsFactory
+				.read(contact_id)
+				.success(function (json) {
+					console.log(json);
+					$scope.contacts = json;
+					$scope.$apply();
+				})
+				.error(function(jqXHR, textStatus, errorThrown) {
+					console.log(jqXHR);
+					console.log(textStatus);
+					console.log(errorThrown);
+				});
+		};
+	};
+
+// @ngInject ====================================
+	app.controller('contacts_ctrl', contacts_ctrl);
+
+
+
+}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controllers/contacts.js","/controllers")
+},{"+7ZJp0":26,"buffer":23}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -68,11 +123,12 @@ require('./user_roles.js');
 // Define the list of controllers here
 	require('./main');
 	require('./login');
+	require('./contacts');
 
 // Exposing Module ============================
 	module.exports = angular.module('app.controllers', []);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controllers/index.js","/controllers")
-},{"+7ZJp0":24,"./login":6,"./main":7,"angular":19,"buffer":21}],6:[function(require,module,exports){
+},{"+7ZJp0":26,"./contacts":5,"./login":7,"./main":8,"angular":21,"buffer":23}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -91,7 +147,7 @@ require('./user_roles.js');
 				.then(function (user) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.setCurrentUser(user);
-					$state.go('secure.dashboard');
+					$state.go('main.secure.dashboard');
 				}, function () {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
 				});
@@ -104,7 +160,7 @@ require('./user_roles.js');
 
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controllers/login.js","/controllers")
-},{"+7ZJp0":24,"buffer":21}],7:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -115,7 +171,7 @@ require('./user_roles.js');
 		$scope.currentUser = null;
 		$scope.userRoles = USER_ROLES;
 		$scope.isAuthorized = AuthFactory.isAuthorized;
-		console.log("main");
+
 		$scope.setCurrentUser = function (user) {
 			$scope.currentUser = user;
 		};
@@ -124,7 +180,7 @@ require('./user_roles.js');
 // @ngInject ====================================
 	app.controller('main_ctrl', main_ctrl);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controllers/main.js","/controllers")
-},{"+7ZJp0":24,"buffer":21}],8:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -159,7 +215,7 @@ require('./user_roles.js');
 // @ngInject ====================================
 	app.factory('AuthFactory', AuthFactory);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/auth.js","/factories")
-},{"+7ZJp0":24,"angular":19,"buffer":21}],9:[function(require,module,exports){
+},{"+7ZJp0":26,"angular":21,"buffer":23}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -181,7 +237,40 @@ require('./user_roles.js');
 // @ngInject ====================================
 	app.factory('AuthInterceptor', AuthInterceptor);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/auth_interceptor.js","/factories")
-},{"+7ZJp0":24,"buffer":21}],10:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],11:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+'use strict';
+
+// Dependencies =================================
+	var angular = require('angular');
+
+// Factory ======================================
+	var ContactsFactory = function($http) {
+		var contacts = {
+			read: function(contact_id) {
+				var url = (typeof contact_id !== 'undefined' && contact_id !== '')? '/api/contact/'+contact_id: '/api/contact';
+				return $.ajax({
+					url: url,
+					type: 'get',
+					dataType: 'json'
+				});
+			},
+			delete: function(contact_id) {
+				return $.ajax({
+					url: '/api/contact/' + contact_id,
+					type: 'DELETE',
+					dataType: 'json'
+				});
+			}
+		};
+
+		return contacts;
+	};
+
+// @ngInject ====================================
+	app.factory('ContactsFactory', ContactsFactory);
+}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/contacts.js","/factories")
+},{"+7ZJp0":26,"angular":21,"buffer":23}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -192,9 +281,10 @@ module.exports = angular.module('app.factories', []);
 // Define the list of factories here
 require('./auth.js');
 require('./auth_interceptor.js');
+require('./contacts.js');
 require('./ui-notifications.js');
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/index.js","/factories")
-},{"+7ZJp0":24,"./auth.js":8,"./auth_interceptor.js":9,"./ui-notifications.js":11,"angular":19,"buffer":21}],11:[function(require,module,exports){
+},{"+7ZJp0":26,"./auth.js":9,"./auth_interceptor.js":10,"./contacts.js":11,"./ui-notifications.js":13,"angular":21,"buffer":23}],13:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -319,7 +409,7 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 });
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/ui-notifications.js","/factories")
-},{"+7ZJp0":24,"buffer":21}],12:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // @main
 // Luis Matute
@@ -364,13 +454,13 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 		// Bootstraping App to Doc ----
 		angular.bootstrap(document, ['app']);
 	});
-}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5cc2d57.js","/")
-},{"+7ZJp0":24,"./config":1,"./constants/":3,"./controllers/":5,"./factories/":10,"./on_run":13,"./routes":14,"./services/":15,"angular":19,"angular-animate":17,"angular-ui-router":18,"buffer":21,"jquery":20}],13:[function(require,module,exports){
+}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b920fd1e.js","/")
+},{"+7ZJp0":26,"./config":1,"./constants/":3,"./controllers/":6,"./factories/":12,"./on_run":15,"./routes":16,"./services/":17,"angular":21,"angular-animate":19,"angular-ui-router":20,"buffer":23,"jquery":22}],15:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
 // @ngInject ====================================
-	function on_run($rootScope, Config, AUTH_EVENTS, AuthFactory) {
+	function on_run($rootScope, Config, $state, AUTH_EVENTS, AuthFactory) {
 		$rootScope.app_name = Config.app_name;
 		$rootScope.title = Config.app_name;
 
@@ -381,8 +471,7 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 			var authorizedRoles = next.data.authorizedRoles;
 
 			if (authorizedRoles.indexOf('*') !== -1) return true; // anyone can access it
-			console.log(authorizedRoles);
-			console.log(!AuthFactory.isAuthorized(authorizedRoles));
+
 			if (!AuthFactory.isAuthorized(authorizedRoles)) {
 				event.preventDefault();
 				if (AuthFactory.isAuthenticated()) {
@@ -392,45 +481,63 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 					// user is not logged in
 					$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
 				}
+				if (next.name !== "main.login" || next.name !== "main") {
+					$state.go('main.login');
+				}
 			}
 		});
 	}
 
 module.exports = on_run;
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/on_run.js","/")
-},{"+7ZJp0":24,"buffer":21}],14:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
 // @ngInject ====================================
 	function Routes($stateProvider, $locationProvider, $urlRouterProvider, $httpProvider, Config, USER_ROLES) {
 		$stateProvider
-			// UnSecured
-			.state('login', {
-				url: '/',
-				templateUrl: Config.tpl('login'),
-				controller: 'login_ctrl',
-				data: {
-					authorizedRoles: [USER_ROLES.all]
-				}
-			})
-			// Secured
-			.state('secure',{
+			.state('main',{
 				abstract: true,
-				template: '<ui-view />',
-				data: {
-					authorizedRoles: [USER_ROLES.admin]
-				}
+				url: '/admin',
+				controller: 'main_ctrl',
+				template: '<ui-view />'
 			})
-				.state('secure.dashboard',{
-					url: '/dashboard',
-					templateUrl: Config.tpl('dash')
-				});
+				// UnSecured
+				.state('main.login', {
+					url: '/',
+					templateUrl: Config.tpl('login'),
+					controller: 'login_ctrl',
+					data: {
+						authorizedRoles: [USER_ROLES.all]
+					}
+				})
+				// Secured
+				.state('main.secure',{
+					abstract: true,
+					template: '<ui-view />',
+					data: {
+						authorizedRoles: [USER_ROLES.admin]
+					}
+				})
+					.state('main.secure.dashboard',{
+						url: '/dashboard',
+						templateUrl: Config.tpl('dash')
+					})
+					.state('main.secure.contacts',{
+						url: '/contacts',
+						templateUrl: Config.tpl('contacts/index'),
+						controller: 'contacts_ctrl'
+					})
+						.state('main.secure.contacts.edit',{
+							url: '/edit/:contact_id',
+							templateUrl: Config.tpl('contacts/edit')
+						});
 
 		$urlRouterProvider.otherwise('/');
 		$locationProvider.html5Mode({
-		 enabled: true,
-		 requireBase: false
+			enabled: true,
+			requireBase: false
 		});
 
 		$httpProvider.interceptors.push(['$injector', function ($injector) {
@@ -440,7 +547,7 @@ module.exports = on_run;
 
 module.exports = Routes;
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/routes.js","/")
-},{"+7ZJp0":24,"buffer":21}],15:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],17:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -451,7 +558,7 @@ module.exports = angular.module('app.services', []);
 // Define the list of services here
 require('./session.js');
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/services/index.js","/services")
-},{"+7ZJp0":24,"./session.js":16,"angular":19,"buffer":21}],16:[function(require,module,exports){
+},{"+7ZJp0":26,"./session.js":18,"angular":21,"buffer":23}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -474,7 +581,7 @@ require('./session.js');
 // @ngInject ====================================
 	app.service('Session', SessionService);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/services/session.js","/services")
-},{"+7ZJp0":24,"buffer":21}],17:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * @license AngularJS v1.3.15
@@ -2615,7 +2722,7 @@ angular.module('ngAnimate', ['ng'])
 })(window, window.angular);
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/angular-animate/angular-animate.js","/../../../bower_components/angular-animate")
-},{"+7ZJp0":24,"buffer":21}],18:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * State-based routing for AngularJS
@@ -6850,7 +6957,7 @@ angular.module('ui.router.state')
   .filter('includedByState', $IncludedByStateFilter);
 })(window, window.angular);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/angular-ui-router/release/angular-ui-router.js","/../../../bower_components/angular-ui-router/release")
-},{"+7ZJp0":24,"buffer":21}],19:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],21:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 ;__browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /**
@@ -33167,7 +33274,7 @@ var minlengthDirective = function() {
 }).call(global, undefined, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/angular/angular.js","/../../../bower_components/angular")
-},{"+7ZJp0":24,"buffer":21}],20:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],22:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * jQuery JavaScript Library v2.1.3
@@ -42376,7 +42483,7 @@ return jQuery;
 }));
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/jquery/dist/jquery.js","/../../../bower_components/jquery/dist")
-},{"+7ZJp0":24,"buffer":21}],21:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],23:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -43489,7 +43596,7 @@ function assert (test, message) {
 }
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js","/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer")
-},{"+7ZJp0":24,"base64-js":22,"buffer":21,"ieee754":23}],22:[function(require,module,exports){
+},{"+7ZJp0":26,"base64-js":24,"buffer":23,"ieee754":25}],24:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -43617,7 +43724,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib")
-},{"+7ZJp0":24,"buffer":21}],23:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],25:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
@@ -43705,7 +43812,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754")
-},{"+7ZJp0":24,"buffer":21}],24:[function(require,module,exports){
+},{"+7ZJp0":26,"buffer":23}],26:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -43772,4 +43879,4 @@ process.chdir = function (dir) {
 };
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js","/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process")
-},{"+7ZJp0":24,"buffer":21}]},{},[12])
+},{"+7ZJp0":26,"buffer":23}]},{},[14])
