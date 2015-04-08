@@ -4,18 +4,21 @@
 	var angular = require('angular');
 
 // Factory ======================================
-	var AuthFactory = function($http, Session) {
+	var AuthFactory = function($http, $cookieStore, Session) {
 		var factory = {
 			login: function (credentials) {
 				return $http
 					.post('/login/', credentials)
 					.then(function (res) {
-						Session.create('1', res.data._id, res.data.role, res.data.email);
-						return res.data;
+						var user = res.data.user;
+						user.id = res.data.session_id;
+						$cookieStore.put('app_session', user.id);
+						new Session.create(user.id, user._id, user.role, user.email);
+						return user;
 					});
 			},
 			isAuthenticated: function () {
-				return !!Session.user_id;
+				return !!Session.id;
 			},
 			isAuthorized: function (authorizedRoles) {
 				if (!angular.isArray(authorizedRoles)) {

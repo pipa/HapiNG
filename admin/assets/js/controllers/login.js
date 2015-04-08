@@ -3,7 +3,7 @@
 // Dependencies =================================
 
 // Controller Function ==========================
-	var login_ctrl = function ($scope, $rootScope, $state, AuthFactory, AUTH_EVENTS) {
+	var login_ctrl = function ($scope, $rootScope, $state, AuthFactory, AUTH_EVENTS, $location) {
 		$scope.credentials = {
 			username: '',
 			password: ''
@@ -15,7 +15,8 @@
 				.then(function (user) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.setCurrentUser(user);
-					$state.go('main.secure.dashboard');
+					$location.path('/admin/dashboard');
+					// $state.go('main.secure.dashboard');
 				}, function () {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
 				});

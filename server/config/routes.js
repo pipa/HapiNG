@@ -34,7 +34,19 @@
 			{ method: 'GET', 	path: '/admin/{path*}',				config: controller.admin.index },
 
 			// Public
-			{ method: 'GET', path: '/', handler: function (request, reply) { return reply('ok'); } }
+			{ method: 'GET', path: '/', handler: function (request, reply) { return reply('ok'); } },
+			{ method: 'GET', path: '/reset', handler: function (request, reply) { request.session.reset(); return reply('ok'); } },
+			{
+				method: 'GET',
+				path: '/get_session/{session_id}',
+				handler: function (request, reply) {
+					var get_session = request.session.get(request.params.session_id);
+					return reply((typeof get_session !== 'undefined')? get_session:{});
+				}
+			},
+
+			// 404
+			{ method: 'GET', path: '/{p*}', handler: function (request, reply) { return reply.view('404'); } }
 		];
 
 		server.route(routes_table);

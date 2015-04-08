@@ -3,13 +3,11 @@
 // Dependencies =================================
 
 // Controller Function ==========================
-	var main_ctrl = function ($scope, USER_ROLES, AuthFactory) {
-		$scope.currentUser = null;
-		$scope.userRoles = USER_ROLES;
-		$scope.isAuthorized = AuthFactory.isAuthorized;
-
-		$scope.setCurrentUser = function (user) {
-			$scope.currentUser = user;
+	var main_ctrl = function ($rootScope, $scope, $location, $cookieStore) {
+		$scope.logout = function() {
+			$rootScope.setCurrentUser(null);
+			$cookieStore.remove('app_session');
+			$location.path('/admin/');
 		};
 	};
 

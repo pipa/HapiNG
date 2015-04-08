@@ -7,7 +7,14 @@
 		public_path	= __dirname + '/public';
 
 // Initialization code for the App ==============
-	var server = new Hapi.Server({ app: config });
+	var server = new Hapi.Server({
+			app: config,
+			cache: {
+				engine: require('catbox-mongodb'),
+				host: '127.0.0.1',
+				partition: 'catbox'
+			}
+		});
 
 	// Template Engines
 		server.views({

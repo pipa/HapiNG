@@ -8,12 +8,13 @@
 	window.jQuery = window.$ = require('jquery');
 	require('angular');
 	require('angular-animate');
+	require('angular-cookies');
 	require('angular-ui-router');
 
 
 // Create and Bootstrap Angular App =============
 	angular.element(document).ready(function(){
-		var requires = ['ngAnimate','ui.router'];
+		var requires = ['ngAnimate','ui.router','ngCookies'];
 		window.app = angular.module('app', requires);
 
 		// App Configurations ---------

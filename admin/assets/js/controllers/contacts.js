@@ -17,7 +17,6 @@
 			ContactsFactory
 				.delete(contact._id)
 				.success(function (json) {
-					console.log(json);
 					var contact_index = $scope.contacts.indexOf(contact);
 					$scope.contacts.splice( contact_index, 1 );
 					$scope.$apply();

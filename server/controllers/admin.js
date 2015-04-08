@@ -11,6 +11,7 @@
 		admin = {
 			index: {
 				handler: function (request, reply) {
+					console.log(request.session);
 					var conf = {
 						env: config.env.name
 					};
@@ -35,7 +36,11 @@
 						user.comparePassword(request.payload.password, function(err, isMatch) {
 							if (err) throw err;
 
-							if (isMatch) return reply(user);
+							request.session.set(request.session.id, {user: user});
+							if (isMatch) return reply({
+								session_id: request.session.id,
+								user: user
+							});
 							else return reply(Boom.unauthorized('invalid password'));
 						});
 					});

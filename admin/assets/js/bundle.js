@@ -21,7 +21,7 @@
 		}
 	};
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/config.js","/")
-},{"+7ZJp0":26,"buffer":23}],2:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -35,7 +35,7 @@
 		notAuthorized: 'auth-not-authorized'
 	});
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/constants/auth_events.js","/constants")
-},{"+7ZJp0":26,"buffer":23}],3:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -47,7 +47,7 @@ module.exports = angular.module('app.constants', []);
 require('./auth_events.js');
 require('./user_roles.js');
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/constants/index.js","/constants")
-},{"+7ZJp0":26,"./auth_events.js":2,"./user_roles.js":4,"angular":21,"buffer":23}],4:[function(require,module,exports){
+},{"+7ZJp0":27,"./auth_events.js":2,"./user_roles.js":4,"angular":22,"buffer":24}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -58,7 +58,7 @@ require('./user_roles.js');
 		guest: 'guest'
 	});
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/constants/user_roles.js","/constants")
-},{"+7ZJp0":26,"buffer":23}],5:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
@@ -79,7 +79,6 @@ require('./user_roles.js');
 			ContactsFactory
 				.delete(contact._id)
 				.success(function (json) {
-					console.log(json);
 					var contact_index = $scope.contacts.indexOf(contact);
 					$scope.contacts.splice( contact_index, 1 );
 					$scope.$apply();
@@ -113,7 +112,7 @@ require('./user_roles.js');
 
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controllers/contacts.js","/controllers")
-},{"+7ZJp0":26,"buffer":23}],6:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -128,14 +127,14 @@ require('./user_roles.js');
 // Exposing Module ============================
 	module.exports = angular.module('app.controllers', []);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controllers/index.js","/controllers")
-},{"+7ZJp0":26,"./contacts":5,"./login":7,"./main":8,"angular":21,"buffer":23}],7:[function(require,module,exports){
+},{"+7ZJp0":27,"./contacts":5,"./login":7,"./main":8,"angular":22,"buffer":24}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
 // Dependencies =================================
 
 // Controller Function ==========================
-	var login_ctrl = function ($scope, $rootScope, $state, AuthFactory, AUTH_EVENTS) {
+	var login_ctrl = function ($scope, $rootScope, $state, AuthFactory, AUTH_EVENTS, $location) {
 		$scope.credentials = {
 			username: '',
 			password: ''
@@ -147,7 +146,8 @@ require('./user_roles.js');
 				.then(function (user) {
 					$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
 					$scope.setCurrentUser(user);
-					$state.go('main.secure.dashboard');
+					$location.path('/admin/dashboard');
+					// $state.go('main.secure.dashboard');
 				}, function () {
 					$rootScope.$broadcast(AUTH_EVENTS.loginFailed);
 				});
@@ -160,27 +160,25 @@ require('./user_roles.js');
 
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controllers/login.js","/controllers")
-},{"+7ZJp0":26,"buffer":23}],8:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
 // Dependencies =================================
 
 // Controller Function ==========================
-	var main_ctrl = function ($scope, USER_ROLES, AuthFactory) {
-		$scope.currentUser = null;
-		$scope.userRoles = USER_ROLES;
-		$scope.isAuthorized = AuthFactory.isAuthorized;
-
-		$scope.setCurrentUser = function (user) {
-			$scope.currentUser = user;
+	var main_ctrl = function ($rootScope, $scope, $location, $cookieStore) {
+		$scope.logout = function() {
+			$rootScope.setCurrentUser(null);
+			$cookieStore.remove('app_session');
+			$location.path('/admin/');
 		};
 	};
 
 // @ngInject ====================================
 	app.controller('main_ctrl', main_ctrl);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/controllers/main.js","/controllers")
-},{"+7ZJp0":26,"buffer":23}],9:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -188,18 +186,21 @@ require('./user_roles.js');
 	var angular = require('angular');
 
 // Factory ======================================
-	var AuthFactory = function($http, Session) {
+	var AuthFactory = function($http, $cookieStore, Session) {
 		var factory = {
 			login: function (credentials) {
 				return $http
 					.post('/login/', credentials)
 					.then(function (res) {
-						Session.create('1', res.data._id, res.data.role, res.data.email);
-						return res.data;
+						var user = res.data.user;
+						user.id = res.data.session_id;
+						$cookieStore.put('app_session', user.id);
+						new Session.create(user.id, user._id, user.role, user.email);
+						return user;
 					});
 			},
 			isAuthenticated: function () {
-				return !!Session.user_id;
+				return !!Session.id;
 			},
 			isAuthorized: function (authorizedRoles) {
 				if (!angular.isArray(authorizedRoles)) {
@@ -215,7 +216,7 @@ require('./user_roles.js');
 // @ngInject ====================================
 	app.factory('AuthFactory', AuthFactory);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/auth.js","/factories")
-},{"+7ZJp0":26,"angular":21,"buffer":23}],10:[function(require,module,exports){
+},{"+7ZJp0":27,"angular":22,"buffer":24}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -237,7 +238,7 @@ require('./user_roles.js');
 // @ngInject ====================================
 	app.factory('AuthInterceptor', AuthInterceptor);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/auth_interceptor.js","/factories")
-},{"+7ZJp0":26,"buffer":23}],11:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],11:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -270,7 +271,7 @@ require('./user_roles.js');
 // @ngInject ====================================
 	app.factory('ContactsFactory', ContactsFactory);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/contacts.js","/factories")
-},{"+7ZJp0":26,"angular":21,"buffer":23}],12:[function(require,module,exports){
+},{"+7ZJp0":27,"angular":22,"buffer":24}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -284,7 +285,7 @@ require('./auth_interceptor.js');
 require('./contacts.js');
 require('./ui-notifications.js');
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/index.js","/factories")
-},{"+7ZJp0":26,"./auth.js":9,"./auth_interceptor.js":10,"./contacts.js":11,"./ui-notifications.js":13,"angular":21,"buffer":23}],13:[function(require,module,exports){
+},{"+7ZJp0":27,"./auth.js":9,"./auth_interceptor.js":10,"./contacts.js":11,"./ui-notifications.js":13,"angular":22,"buffer":24}],13:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -409,7 +410,7 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 });
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/factories/ui-notifications.js","/factories")
-},{"+7ZJp0":26,"buffer":23}],14:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // @main
 // Luis Matute
@@ -421,12 +422,13 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 	window.jQuery = window.$ = require('jquery');
 	require('angular');
 	require('angular-animate');
+	require('angular-cookies');
 	require('angular-ui-router');
 
 
 // Create and Bootstrap Angular App =============
 	angular.element(document).ready(function(){
-		var requires = ['ngAnimate','ui.router'];
+		var requires = ['ngAnimate','ui.router','ngCookies'];
 		window.app = angular.module('app', requires);
 
 		// App Configurations ---------
@@ -454,35 +456,75 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 		// Bootstraping App to Doc ----
 		angular.bootstrap(document, ['app']);
 	});
-}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_b920fd1e.js","/")
-},{"+7ZJp0":26,"./config":1,"./constants/":3,"./controllers/":6,"./factories/":12,"./on_run":15,"./routes":16,"./services/":17,"angular":21,"angular-animate":19,"angular-ui-router":20,"buffer":23,"jquery":22}],15:[function(require,module,exports){
+}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7ca72660.js","/")
+},{"+7ZJp0":27,"./config":1,"./constants/":3,"./controllers/":6,"./factories/":12,"./on_run":15,"./routes":16,"./services/":17,"angular":22,"angular-animate":19,"angular-cookies":20,"angular-ui-router":21,"buffer":24,"jquery":23}],15:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 "use strict";
 
 // @ngInject ====================================
-	function on_run($rootScope, Config, $state, AUTH_EVENTS, AuthFactory) {
+	function on_run($rootScope, $state, $cookies, Config, Session, AUTH_EVENTS, USER_ROLES, AuthFactory) {
 		$rootScope.app_name = Config.app_name;
 		$rootScope.title = Config.app_name;
+
+		// Session Management
+		$rootScope.currentUser = null;
+		$rootScope.userRoles = USER_ROLES;
+		$rootScope.isAuthorized = AuthFactory.isAuthorized;
+
+		$rootScope.setCurrentUser = function (user) {
+			$rootScope.currentUser = user;
+		};
 
 		// Application Vars
 		$rootScope.le_app = window.le_app;
 
 		$rootScope.$on('$stateChangeStart', function (event, next) {
-			var authorizedRoles = next.data.authorizedRoles;
+			if('app_session' in $cookies && $rootScope.currentUser === null) {
+				var session_id = $cookies.app_session.replace(/"/g, "");
+				$.ajax({
+					url: '/get_session/'+session_id,
+					type: 'get',
+					dataType: 'json',
+					success: function (json) {
+						if ('user' in json) {
+							var user = json.user;
+							user.id = session_id;
+							Session.create(user.id, user._id, user.role, user.email);
+							$rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
+							$rootScope.currentUser = user;
+						}
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log(jqXHR);
+						console.log(textStatus);
+						console.log(errorThrown);
+					},
+					complete: function() {
+						check_auth(1);
+					}
+				});
+			} else {
+				check_auth(2);
+			}
 
-			if (authorizedRoles.indexOf('*') !== -1) return true; // anyone can access it
+			function check_auth(s) {
+				// console.log(s);
+				var authorizedRoles = next.data.authorizedRoles;
 
-			if (!AuthFactory.isAuthorized(authorizedRoles)) {
-				event.preventDefault();
-				if (AuthFactory.isAuthenticated()) {
-					// user is not allowed
-					$rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-				} else {
-					// user is not logged in
-					$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
-				}
-				if (next.name !== "main.login" || next.name !== "main") {
-					$state.go('main.login');
+				if (authorizedRoles.indexOf('*') !== -1) return true; // anyone can access it
+
+				if (!AuthFactory.isAuthorized(authorizedRoles)) {
+					event.preventDefault();
+					if (AuthFactory.isAuthenticated()) {
+						// user is not allowed
+						$rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+					} else {
+						// user is not logged in
+						$rootScope.$broadcast(AUTH_EVENTS.notAuthenticated);
+					}
+					if (next.name !== "main.login" || next.name !== "main") {
+						$state.go('main.login');
+					}
 				}
 			}
 		});
@@ -490,7 +532,7 @@ app.factory('Notification', function ($timeout, $http, $compile, $templateCache,
 
 module.exports = on_run;
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/on_run.js","/")
-},{"+7ZJp0":26,"buffer":23}],16:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -500,7 +542,6 @@ module.exports = on_run;
 			.state('main',{
 				abstract: true,
 				url: '/admin',
-				controller: 'main_ctrl',
 				template: '<ui-view />'
 			})
 				// UnSecured
@@ -516,6 +557,7 @@ module.exports = on_run;
 				.state('main.secure',{
 					abstract: true,
 					template: '<ui-view />',
+					controller: 'main_ctrl',
 					data: {
 						authorizedRoles: [USER_ROLES.admin]
 					}
@@ -547,7 +589,7 @@ module.exports = on_run;
 
 module.exports = Routes;
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/routes.js","/")
-},{"+7ZJp0":26,"buffer":23}],17:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],17:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -558,7 +600,7 @@ module.exports = angular.module('app.services', []);
 // Define the list of services here
 require('./session.js');
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/services/index.js","/services")
-},{"+7ZJp0":26,"./session.js":18,"angular":21,"buffer":23}],18:[function(require,module,exports){
+},{"+7ZJp0":27,"./session.js":18,"angular":22,"buffer":24}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -581,7 +623,7 @@ require('./session.js');
 // @ngInject ====================================
 	app.service('Session', SessionService);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/services/session.js","/services")
-},{"+7ZJp0":26,"buffer":23}],19:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * @license AngularJS v1.3.15
@@ -2722,7 +2764,217 @@ angular.module('ngAnimate', ['ng'])
 })(window, window.angular);
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/angular-animate/angular-animate.js","/../../../bower_components/angular-animate")
-},{"+7ZJp0":26,"buffer":23}],20:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],20:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+/**
+ * @license AngularJS v1.3.15
+ * (c) 2010-2014 Google, Inc. http://angularjs.org
+ * License: MIT
+ */
+(function(window, angular, undefined) {'use strict';
+
+/**
+ * @ngdoc module
+ * @name ngCookies
+ * @description
+ *
+ * # ngCookies
+ *
+ * The `ngCookies` module provides a convenient wrapper for reading and writing browser cookies.
+ *
+ *
+ * <div doc-module-components="ngCookies"></div>
+ *
+ * See {@link ngCookies.$cookies `$cookies`} and
+ * {@link ngCookies.$cookieStore `$cookieStore`} for usage.
+ */
+
+
+angular.module('ngCookies', ['ng']).
+  /**
+   * @ngdoc service
+   * @name $cookies
+   *
+   * @description
+   * Provides read/write access to browser's cookies.
+   *
+   * Only a simple Object is exposed and by adding or removing properties to/from this object, new
+   * cookies are created/deleted at the end of current $eval.
+   * The object's properties can only be strings.
+   *
+   * Requires the {@link ngCookies `ngCookies`} module to be installed.
+   *
+   * @example
+   *
+   * ```js
+   * angular.module('cookiesExample', ['ngCookies'])
+   *   .controller('ExampleController', ['$cookies', function($cookies) {
+   *     // Retrieving a cookie
+   *     var favoriteCookie = $cookies.myFavorite;
+   *     // Setting a cookie
+   *     $cookies.myFavorite = 'oatmeal';
+   *   }]);
+   * ```
+   */
+   factory('$cookies', ['$rootScope', '$browser', function($rootScope, $browser) {
+      var cookies = {},
+          lastCookies = {},
+          lastBrowserCookies,
+          runEval = false,
+          copy = angular.copy,
+          isUndefined = angular.isUndefined;
+
+      //creates a poller fn that copies all cookies from the $browser to service & inits the service
+      $browser.addPollFn(function() {
+        var currentCookies = $browser.cookies();
+        if (lastBrowserCookies != currentCookies) { //relies on browser.cookies() impl
+          lastBrowserCookies = currentCookies;
+          copy(currentCookies, lastCookies);
+          copy(currentCookies, cookies);
+          if (runEval) $rootScope.$apply();
+        }
+      })();
+
+      runEval = true;
+
+      //at the end of each eval, push cookies
+      //TODO: this should happen before the "delayed" watches fire, because if some cookies are not
+      //      strings or browser refuses to store some cookies, we update the model in the push fn.
+      $rootScope.$watch(push);
+
+      return cookies;
+
+
+      /**
+       * Pushes all the cookies from the service to the browser and verifies if all cookies were
+       * stored.
+       */
+      function push() {
+        var name,
+            value,
+            browserCookies,
+            updated;
+
+        //delete any cookies deleted in $cookies
+        for (name in lastCookies) {
+          if (isUndefined(cookies[name])) {
+            $browser.cookies(name, undefined);
+          }
+        }
+
+        //update all cookies updated in $cookies
+        for (name in cookies) {
+          value = cookies[name];
+          if (!angular.isString(value)) {
+            value = '' + value;
+            cookies[name] = value;
+          }
+          if (value !== lastCookies[name]) {
+            $browser.cookies(name, value);
+            updated = true;
+          }
+        }
+
+        //verify what was actually stored
+        if (updated) {
+          updated = false;
+          browserCookies = $browser.cookies();
+
+          for (name in cookies) {
+            if (cookies[name] !== browserCookies[name]) {
+              //delete or reset all cookies that the browser dropped from $cookies
+              if (isUndefined(browserCookies[name])) {
+                delete cookies[name];
+              } else {
+                cookies[name] = browserCookies[name];
+              }
+              updated = true;
+            }
+          }
+        }
+      }
+    }]).
+
+
+  /**
+   * @ngdoc service
+   * @name $cookieStore
+   * @requires $cookies
+   *
+   * @description
+   * Provides a key-value (string-object) storage, that is backed by session cookies.
+   * Objects put or retrieved from this storage are automatically serialized or
+   * deserialized by angular's toJson/fromJson.
+   *
+   * Requires the {@link ngCookies `ngCookies`} module to be installed.
+   *
+   * @example
+   *
+   * ```js
+   * angular.module('cookieStoreExample', ['ngCookies'])
+   *   .controller('ExampleController', ['$cookieStore', function($cookieStore) {
+   *     // Put cookie
+   *     $cookieStore.put('myFavorite','oatmeal');
+   *     // Get cookie
+   *     var favoriteCookie = $cookieStore.get('myFavorite');
+   *     // Removing a cookie
+   *     $cookieStore.remove('myFavorite');
+   *   }]);
+   * ```
+   */
+   factory('$cookieStore', ['$cookies', function($cookies) {
+
+      return {
+        /**
+         * @ngdoc method
+         * @name $cookieStore#get
+         *
+         * @description
+         * Returns the value of given cookie key
+         *
+         * @param {string} key Id to use for lookup.
+         * @returns {Object} Deserialized cookie value.
+         */
+        get: function(key) {
+          var value = $cookies[key];
+          return value ? angular.fromJson(value) : value;
+        },
+
+        /**
+         * @ngdoc method
+         * @name $cookieStore#put
+         *
+         * @description
+         * Sets a value for given cookie key
+         *
+         * @param {string} key Id for the `value`.
+         * @param {Object} value Value to be stored.
+         */
+        put: function(key, value) {
+          $cookies[key] = angular.toJson(value);
+        },
+
+        /**
+         * @ngdoc method
+         * @name $cookieStore#remove
+         *
+         * @description
+         * Remove given cookie
+         *
+         * @param {string} key Id of the key-value pair to delete.
+         */
+        remove: function(key) {
+          delete $cookies[key];
+        }
+      };
+
+    }]);
+
+
+})(window, window.angular);
+
+}).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/angular-cookies/angular-cookies.js","/../../../bower_components/angular-cookies")
+},{"+7ZJp0":27,"buffer":24}],21:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * State-based routing for AngularJS
@@ -6957,7 +7209,7 @@ angular.module('ui.router.state')
   .filter('includedByState', $IncludedByStateFilter);
 })(window, window.angular);
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/angular-ui-router/release/angular-ui-router.js","/../../../bower_components/angular-ui-router/release")
-},{"+7ZJp0":26,"buffer":23}],21:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],22:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 ;__browserify_shim_require__=require;(function browserifyShim(module, exports, require, define, browserify_shim__define__module__export__) {
 /**
@@ -33274,7 +33526,7 @@ var minlengthDirective = function() {
 }).call(global, undefined, undefined, undefined, undefined, function defineExport(ex) { module.exports = ex; });
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/angular/angular.js","/../../../bower_components/angular")
-},{"+7ZJp0":26,"buffer":23}],22:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],23:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * jQuery JavaScript Library v2.1.3
@@ -42483,7 +42735,7 @@ return jQuery;
 }));
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../bower_components/jquery/dist/jquery.js","/../../../bower_components/jquery/dist")
-},{"+7ZJp0":26,"buffer":23}],23:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],24:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -43596,7 +43848,7 @@ function assert (test, message) {
 }
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js","/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer")
-},{"+7ZJp0":26,"base64-js":24,"buffer":23,"ieee754":25}],24:[function(require,module,exports){
+},{"+7ZJp0":27,"base64-js":25,"buffer":24,"ieee754":26}],25:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -43724,7 +43976,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib")
-},{"+7ZJp0":26,"buffer":23}],25:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],26:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
@@ -43812,7 +44064,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754")
-},{"+7ZJp0":26,"buffer":23}],26:[function(require,module,exports){
+},{"+7ZJp0":27,"buffer":24}],27:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -43879,4 +44131,4 @@ process.chdir = function (dir) {
 };
 
 }).call(this,require("+7ZJp0"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js","/../../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process")
-},{"+7ZJp0":26,"buffer":23}]},{},[14])
+},{"+7ZJp0":27,"buffer":24}]},{},[14])

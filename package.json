@@ -37,6 +37,9 @@
   "dependencies": {
     "bcrypt": "^0.8.2",
     "boom": "^2.7.0",
+    "catbox": "^4.2.2",
+    "catbox-mongodb": "^1.1.0",
+    "catbox-redis": "^1.0.4",
     "good": "^5.1.2",
     "good-console": "^4.1.0",
     "handlebars": "^3.0.1",
@@ -55,6 +58,7 @@
   "browser": {
     "angular": "./bower_components/angular/angular.js",
     "angular-animate": "./bower_components/angular-animate/angular-animate.js",
+    "angular-cookies": "./bower_components/angular-cookies/angular-cookies.js",
     "angular-ui-router": "./bower_components/angular-ui-router/release/angular-ui-router.js",
     "jquery": "./bower_components/jquery/dist/jquery.js"
   },

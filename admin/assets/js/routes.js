@@ -6,7 +6,6 @@
 			.state('main',{
 				abstract: true,
 				url: '/admin',
-				controller: 'main_ctrl',
 				template: '<ui-view />'
 			})
 				// UnSecured
@@ -22,6 +21,7 @@
 				.state('main.secure',{
 					abstract: true,
 					template: '<ui-view />',
+					controller: 'main_ctrl',
 					data: {
 						authorizedRoles: [USER_ROLES.admin]
 					}
